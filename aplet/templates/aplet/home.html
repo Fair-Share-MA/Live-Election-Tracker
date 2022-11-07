@@ -1,0 +1,119 @@
+{% extends 'base.html' %} {% block content %}
+
+<section class="section has-background-light">
+  <p class="title">Welcome to the Live Election Tracker (LET)</p>
+  <p>Select a race below to see detailed data</p>
+</section>
+
+<section class="section">
+  <div id="tabs-with-content">
+    <div class="tabs is-boxed">
+      <ul>
+        {% for race in races %}
+        <li>
+          <a> {{ race.officeName }} - {{ race.party }} </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div>
+      {% for race in races %}
+      <section class="tab-content">
+        <p class="title">{{ race.officeName }}</p>
+        <div class="columns">
+          <div class="column"><b>Race type: </b>{{ race.raceType }}</div>
+          <div class="column"><b>Party: </b>{{ race.party }}</div>
+          <div class="column">
+            <b>Called?: </b>{{ race.raceCallStatus|title }}
+          </div>
+          <div class="column">
+            <b>Units reporting: </b>{{ race.reportingUnits|length|add:"-1" }}
+          </div>
+          <div class="column"><b>ID: </b>{{ race.raceID }}</div>
+          <div class="column"><b>Updating in: </b>Timer TODO</div>
+        </div>
+        <p class="subtitle">Cities reporting:</p>
+        <table class="table is-striped is-fullwidth">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Last updated</th>
+              <th>Poll close time</th>
+              <th>% precincts reporting</th>
+              <th>Vote graph</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ru in race.reportingUnits %}
+            <tr>
+              <th>{{ ru.reportingunitID }}</th>
+              <td>{{ ru.reportingunitName }}</td>
+              <td>{{ ru.lastUpdated }}</td>
+              <td>{{ ru.pollClosingTime }}</td>
+              <td>{{ ru.precinctsReportingPct }}</td>
+              <td>TODO</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #tabs-with-content .tabs:not(:last-child) {
+    margin-bottom: 0;
+  }
+
+  #tabs-with-content .tab-content {
+    padding: 1rem;
+    display: none;
+  }
+
+  #tabs-with-content .tab-content.is-active {
+    display: block;
+  }
+</style>
+
+<script>
+  let tabsWithContent = (function () {
+    let tabs = document.querySelectorAll(".tabs li");
+    let tabsContent = document.querySelectorAll(".tab-content");
+
+    let deactvateAllTabs = function () {
+      tabs.forEach(function (tab) {
+        tab.classList.remove("is-active");
+      });
+    };
+
+    let hideTabsContent = function () {
+      tabsContent.forEach(function (tabContent) {
+        tabContent.classList.remove("is-active");
+      });
+    };
+
+    let activateTabsContent = function (tab) {
+      tabsContent[getIndex(tab)].classList.add("is-active");
+    };
+
+    let getIndex = function (el) {
+      return [...el.parentElement.children].indexOf(el);
+    };
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        deactvateAllTabs();
+        hideTabsContent();
+        tab.classList.add("is-active");
+        activateTabsContent(tab);
+      });
+    });
+
+    tabs[0].click();
+  })();
+</script>
+
+{% endblock %}
