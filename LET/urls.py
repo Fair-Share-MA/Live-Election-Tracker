@@ -16,10 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from aplet.views import home, updateData
+from aplet.views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name="home"),
-    path('update', updateData, name="updateData")
+    path('', home, name="home")
 ]
