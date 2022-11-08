@@ -13,7 +13,9 @@
       <ul>
         {% for race in races %}
         <li>
-          <a> {{ race.officeName }} {{ race.seatName }} </a>
+          <a href="?idx={{ forloop.counter }}">
+            {{ race.officeName }} {{ race.seatName }}
+          </a>
         </li>
         {% endfor %}
       </ul>
@@ -32,9 +34,7 @@
             <b>Units reporting: </b>{{ race.reportingUnits|length|add:"-1" }}
           </div>
           <div class="column"><b>ID: </b>{{ race.raceID }}</div>
-          <div class="column">
-            <b>Updating in: </b><span class="timer">Manual</span>
-          </div>
+          <div class="column"><b>Updating every: </b>10s</div>
         </div>
         <p class="subtitle">Cities reporting:</p>
         <table class="table is-striped is-fullwidth">
@@ -174,8 +174,20 @@
       });
     });
 
-    tabs[0].click();
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.has("idx")) {
+      tabs[urlParams.get("idx") - 1].click();
+    } else {
+      tabs[0].click();
+    }
   })();
+</script>
+
+<script>
+  setTimeout(function () {
+    window.location.reload(1);
+  }, 10000);
 </script>
 
 {% endblock %}
