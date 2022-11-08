@@ -1,77 +1,33 @@
-{% extends 'base.html' %} {% load custom %} {% block content %}
+{% extends 'base.html' %} {% block content %}
 
 <section class="section has-background-info has-text-warning">
   <p class="title has-text-warning">Welcome to the Fair Share election Tracker (FaST)</p>
   <p>Select a race below to see detailed data</p>
 </section>
 
-<section class="section">
-  <div id="tabs-with-content">
-    <div class="tabs is-boxed">
-      <ul>
-        {% for race in races %}
-        <li>
-          <a> {{ race.officeName }} {{ race.seatName }} </a>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-    <div>
-      {% for race in races %}
-      <section class="tab-content">
-        <p class="title">{{ race.officeName }}</p>
-        <div class="columns">
-          <div class="column"><b>Race type: </b>{{ race.raceType }}</div>
-          <div class="column"><b>Party: </b>{{ race.party }}</div>
-          <div class="column"><b>Called?: </b>{{ race.raceCallStatus|title }}</div>
-          <div class="column"><b>Units reporting: </b>{{ race.reportingUnits|length|add:"-1" }}</div>
-          <div class="column"><b>ID: </b>{{ race.raceID }}</div>
-          <div class="column"><b>Updating in: </b>Timer TODO</div>
-        </div>
-        <p class="subtitle">Cities reporting:</p>
-        <table class="table is-striped is-fullwidth">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Last updated</th>
-              <th>Precincts reporting</th>
-              {% for candidate in race.reportingUnits.0.candidates %}
-              <th>{{ candidate.first }} {{ candidate.last }}</th>
-              {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for ru in race.reportingUnits %} {% if forloop.first %}
-            <tr class="has-background-warning">
-              <th>{{ ru.reportingunitID }}</th>
-              <th>State total</th>
-              <th>{{ ru.lastUpdated|toDate }}</th>
-              <th>{{ ru.precinctsReportingPct }}%: {{ ru.precinctsReporting }}/{{ ru.precinctsTotal }}</th>
-              {% for candidate in ru.candidates %}
-              <th>{{ candidate.voteCount }}</th>
-              {% endfor %}
-            </tr>
-            {% else %}
-            <tr>
-              <th>{{ ru.reportingunitID }}</th>
-              <td>{{ ru.reportingunitName }}</td>
-              <td>{{ ru.lastUpdated|toDate }}</td>
-              <td>{{ ru.precinctsReportingPct }}%: {{ ru.precinctsReporting }}/{{ ru.precinctsTotal }}</td>
-              {% for candidate in ru.candidates %}
-              <td>{{ candidate.voteCount }}</td>
-              {% endfor %}
-            </tr>
-            {% endif %} {% endfor %}
-          </tbody>
-        </table>
-      </section>
-      {% endfor %}
-    </div>
-  </div>
-</section>
+<div class="liveUpdate">{% include 'aplet/liveUpdate.html' %}</div>
 
 <style>
+  .progress {
+    height: 1.5em;
+    width: 100%;
+    position: relative;
+  }
+  .progress-bar {
+    float: left;
+  }
+  .progress:before {
+    content: attr(data-label);
+    position: absolute;
+    text-align: center;
+    left: 0;
+    right: 0;
+  }
+  .progress .value {
+    display: inline-block;
+    height: 100%;
+  }
+
   #tabs-with-content .tabs:not(:last-child) {
     margin-bottom: 0;
   }
@@ -122,6 +78,11 @@
 
     tabs[0].click();
   })();
+</script>
+<script>
+  setInterval(() => {
+    $(".liveUpdate").html("").load("/update");
+  }, 10000);
 </script>
 
 {% endblock %}

@@ -1,0 +1,75 @@
+{% load custom %}
+
+<section class="section">
+  <div id="tabs-with-content">
+    <div class="tabs is-boxed">
+      <ul>
+        {% for race in races %}
+        <li>
+          <a> {{ race.officeName }} {{ race.seatName }} </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div>
+      {% for race in races %}
+      <section class="tab-content">
+        <p class="title">{{ race.officeName }}</p>
+        <div class="columns">
+          <div class="column"><b>Race type: </b>{{ race.raceType }}</div>
+          <div class="column"><b>Party: </b>{{ race.party }}</div>
+          <div class="column"><b>Called?: </b>{{ race.raceCallStatus|title }}</div>
+          <div class="column"><b>Units reporting: </b>{{ race.reportingUnits|length|add:"-1" }}</div>
+          <div class="column"><b>ID: </b>{{ race.raceID }}</div>
+          <div class="column"><b>Updating in: </b><span class="timer">10s</span></div>
+        </div>
+        <p class="subtitle">Cities reporting:</p>
+        <table class="table is-striped is-fullwidth">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Last updated</th>
+              <th>Precincts reporting</th>
+              {% for candidate in race.reportingUnits.0.candidates %}
+              <th>{{ candidate.first }} {{ candidate.last }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for ru in race.reportingUnits %} {% if forloop.first %}
+            <tr class="has-background-warning">
+              <th>{{ ru.reportingunitID }}</th>
+              <th>State total</th>
+              <th>{{ ru.lastUpdated|toDate }}</th>
+              <th>
+                <div class="progress has-background-light" data-label="{{ ru.precinctsReportingPct }}%: {{ ru.precinctsReporting }}/{{ ru.precinctsTotal }}">
+                  <span class="value has-background-info" style="width: {{ ru.precinctsReportingPct }}%"></span>
+                </div>
+              </th>
+              {% for candidate in ru.candidates %}
+              <th>{{ candidate.voteCount|candidateVotePercent:ru.candidates }}%: {{ candidate.voteCount }}</th>
+              {% endfor %}
+            </tr>
+            {% else %}
+            <tr>
+              <th>{{ ru.reportingunitID }}</th>
+              <td>{{ ru.reportingunitName }}</td>
+              <td>{{ ru.lastUpdated|toDate }}</td>
+              <td>
+                <div class="progress has-background-light" data-label="{{ ru.precinctsReportingPct }}%: {{ ru.precinctsReporting }}/{{ ru.precinctsTotal }}">
+                  <span class="value has-background-info" style="width: {{ ru.precinctsReportingPct }}%"></span>
+                </div>
+              </td>
+              {% for candidate in ru.candidates %}
+              <td>{{ candidate.voteCount|candidateVotePercent:ru.candidates }}%: {{ candidate.voteCount }}</td>
+              {% endfor %}
+            </tr>
+            {% endif %} {% endfor %}
+          </tbody>
+        </table>
+      </section>
+      {% endfor %}
+    </div>
+  </div>
+</section>
