@@ -1,7 +1,7 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} {% load custom %} {% block content %}
 
-<section class="section has-background-light">
-  <p class="title">Welcome to the Live Election Tracker (LET)</p>
+<section class="section has-background-info has-text-warning">
+  <p class="title has-text-warning">Welcome to the Fair Share election Tracker (FaST)</p>
   <p>Select a race below to see detailed data</p>
 </section>
 
@@ -11,7 +11,7 @@
       <ul>
         {% for race in races %}
         <li>
-          <a> {{ race.officeName }} - {{ race.party }} </a>
+          <a> {{ race.officeName }} {{ race.seatName }} </a>
         </li>
         {% endfor %}
       </ul>
@@ -23,12 +23,8 @@
         <div class="columns">
           <div class="column"><b>Race type: </b>{{ race.raceType }}</div>
           <div class="column"><b>Party: </b>{{ race.party }}</div>
-          <div class="column">
-            <b>Called?: </b>{{ race.raceCallStatus|title }}
-          </div>
-          <div class="column">
-            <b>Units reporting: </b>{{ race.reportingUnits|length|add:"-1" }}
-          </div>
+          <div class="column"><b>Called?: </b>{{ race.raceCallStatus|title }}</div>
+          <div class="column"><b>Units reporting: </b>{{ race.reportingUnits|length|add:"-1" }}</div>
           <div class="column"><b>ID: </b>{{ race.raceID }}</div>
           <div class="column"><b>Updating in: </b>Timer TODO</div>
         </div>
@@ -39,22 +35,34 @@
               <th>ID</th>
               <th>Name</th>
               <th>Last updated</th>
-              <th>Poll close time</th>
-              <th>% precincts reporting</th>
-              <th>Vote graph</th>
+              <th>Precincts reporting</th>
+              {% for candidate in race.reportingUnits.0.candidates %}
+              <th>{{ candidate.first }} {{ candidate.last }}</th>
+              {% endfor %}
             </tr>
           </thead>
           <tbody>
-            {% for ru in race.reportingUnits %}
+            {% for ru in race.reportingUnits %} {% if forloop.first %}
+            <tr class="has-background-warning">
+              <th>{{ ru.reportingunitID }}</th>
+              <th>State total</th>
+              <th>{{ ru.lastUpdated|toDate }}</th>
+              <th>{{ ru.precinctsReportingPct }}%: {{ ru.precinctsReporting }}/{{ ru.precinctsTotal }}</th>
+              {% for candidate in ru.candidates %}
+              <th>{{ candidate.voteCount }}</th>
+              {% endfor %}
+            </tr>
+            {% else %}
             <tr>
               <th>{{ ru.reportingunitID }}</th>
               <td>{{ ru.reportingunitName }}</td>
-              <td>{{ ru.lastUpdated }}</td>
-              <td>{{ ru.pollClosingTime }}</td>
-              <td>{{ ru.precinctsReportingPct }}</td>
-              <td>TODO</td>
+              <td>{{ ru.lastUpdated|toDate }}</td>
+              <td>{{ ru.precinctsReportingPct }}%: {{ ru.precinctsReporting }}/{{ ru.precinctsTotal }}</td>
+              {% for candidate in ru.candidates %}
+              <td>{{ candidate.voteCount }}</td>
+              {% endfor %}
             </tr>
-            {% endfor %}
+            {% endif %} {% endfor %}
           </tbody>
         </table>
       </section>
