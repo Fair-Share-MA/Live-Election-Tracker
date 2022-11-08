@@ -21,7 +21,7 @@
       </ul>
     </div>
     <div>
-      {% for race in races %}
+      {% for race in races %} {% if forloop.counter == selected %}
       <section class="tab-content">
         <p class="title">{{ race.officeName }}</p>
         <div class="columns">
@@ -36,6 +36,9 @@
           <div class="column"><b>ID: </b>{{ race.raceID }}</div>
           <div class="column"><b>Updating every: </b>10s</div>
         </div>
+
+        <section class="section">{{ race.reportingUnits|mapfilter }}</section>
+
         <p class="subtitle">Cities reporting:</p>
         <table class="table is-striped is-fullwidth">
           <thead>
@@ -100,7 +103,9 @@
           </tbody>
         </table>
       </section>
-      {% endfor %}
+      {% else %}
+      <section class="tab-content"><p>Not loaded</p></section>
+      {% endif %} {% endfor %}
     </div>
   </div>
 </section>
@@ -187,7 +192,7 @@
 <script>
   setTimeout(function () {
     window.location.reload(1);
-  }, 10000);
+  }, 30000);
 </script>
 
 {% endblock %}
