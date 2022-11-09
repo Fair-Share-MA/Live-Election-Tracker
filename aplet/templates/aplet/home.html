@@ -175,19 +175,17 @@
 
 <script>
   //On document.ready, check if key exists in localStorage
-  document.ready(function () {
-    if (localStorage.getItem("scroll_position") != null) {
-      var scrollPosition = localStorage.getItem("scroll_position");
-      //Scroll to position
-      window.scrollTo(0, scrollPosition);
-    }
-  });
+  if (localStorage.getItem("scroll_position") != null) {
+    var scrollPosition = localStorage.getItem("scroll_position");
+    //Scroll to position
+    window.scrollTo(0, scrollPosition);
+  }
 
   setTimeout(function () {
     //Set scroll position
     localStorage.setItem("scroll_position", document.documentElement.scrollTop);
     window.location.reload(1);
-  }, 10000);
+  }, 20000);
 </script>
 
 {% endblock %}
