@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ew99o^9oys_(tn4p!%%zhleuey3ocxh$5=f9--3l)=*3&+w_5r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -79,8 +79,8 @@ WSGI_APPLICATION = 'LET.wsgi.application'
 
 DATABASES = {
     'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            #'ENGINE': 'django.db.backends.sqlite3',
+            #'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE': 'django.db.backends.sqlite3',
             'NAME': 'ciba',
         }
 }

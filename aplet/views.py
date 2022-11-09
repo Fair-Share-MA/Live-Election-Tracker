@@ -7,4 +7,5 @@ session = CachedSession(expire_after=30)
 def home(request):
     return render(request, 'aplet/home.html', {
         'races': get_races(session),
+        'sel': 1
     })

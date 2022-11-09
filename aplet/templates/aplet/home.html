@@ -21,7 +21,7 @@
       </ul>
     </div>
     <div>
-      {% for race in races %}
+      {% for race in races %} {% if forloop.counter == sel %}
       <section class="tab-content">
         <p class="title">{{ race.officeName }}</p>
         <div class="columns">
@@ -103,7 +103,11 @@
           </tbody>
         </table>
       </section>
-      {% endfor %}
+      {% else %}
+      <section class="tab-content">
+        <p>Not loaded</p>
+      </section>
+      {% endif %} {% endfor %}
     </div>
   </div>
 </section>
@@ -187,10 +191,10 @@
   })();
 </script>
 
-<script>
+<!-- <script>
   setTimeout(function () {
     window.location.reload(1);
-  }, 30000);
-</script>
+  }, 120000);
+</script> -->
 
 {% endblock %}

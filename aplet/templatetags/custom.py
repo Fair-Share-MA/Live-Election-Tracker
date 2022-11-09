@@ -19,7 +19,7 @@ def candidateVotePercent(value, arg):
     return 0
 
 def mapVoteCalculator(candidates):
-    if len(candidates > 2):
+    if len(candidates) > 2:
         return 0
     
     v1 = candidates[0]['voteCount']
@@ -33,7 +33,8 @@ def mapFilter(value):
 
     for idx, unit in enumerate(value):
         if not idx == 0:
-            aggregate['name'] = aggregate['name'].append(unit['reportingunitName'])
-            aggregate['votes'] = aggregate['votes'].append(mapVoteCalculator(unit['candidates']))
+            print(aggregate['name'])
+            aggregate['name'] = aggregate['name'] + [unit['reportingunitName'].upper()]
+            aggregate['votes'] = aggregate['votes'] + [mapVoteCalculator(unit['candidates'])]
 
     return make_map(aggregate)
