@@ -14,5 +14,5 @@ def candidateVotePercent(value, arg):
     for candidate in arg:
         total += candidate['voteCount']
     
-    if total > 0: return value/total
+    if total > 0 and value: return round((float(value)/total) * 100, 2)
     return 0
