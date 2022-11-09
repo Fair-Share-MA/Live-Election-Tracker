@@ -5,9 +5,6 @@ from requests_cache import CachedSession
 session = CachedSession(expire_after=30)
 
 def home(request):
-    selected = request.GET.get('idx', 1)
-
     return render(request, 'aplet/home.html', {
         'races': get_races(session),
-        'selected': selected
     })
